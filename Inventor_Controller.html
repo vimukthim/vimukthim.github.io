@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory Controller | LSG Sky Chefs Auckland | Vimukthi Pathirage</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ══ BRAND TOKENS ══ */
+:root {
+  --indigo:      #2d2b55; --indigo-deep:#1e1c3a; --indigo-mid:#3a3870; --indigo-light:#5c5a9e;
+  --amber:       #e8a84c; --amber-glow:#f0c070;  --amber-dim:#b07830;
+  --rose:        #c9848a; --rose-light:#e8b0b5;  --rose-dim:#a06068;
+  --mint:        #7bbfa8; --mint-light:#a8d8c8;  --mint-dim:#4a9a80;
+  --bg:#16142e; --bg2:#1e1c3a; --surface:#252348; --surface2:#2e2b5a;
+  --text:#ede8f8; --muted:#9b96c0; --border:rgba(93,90,158,0.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;scroll-padding-top:64px;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:1em;line-height:1.65;min-height:100vh;overflow-x:hidden;}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle,rgba(123,191,168,.06) 1px,transparent 1px);
+  background-size:36px 36px;pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;
+  width:900px;height:600px;top:-180px;right:-250px;
+  background:radial-gradient(ellipse,rgba(123,191,168,.05) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+
+/* ══ NAV ══ */
+.vp-nav{position:sticky;top:0;z-index:100;background:rgba(22,20,46,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2em;}
+.vp-nav-inner{max-width:1140px;margin:0 auto;display:flex;align-items:center;height:58px;gap:0;}
+.vp-brand{font-family:'Cormorant Garamond',serif;font-size:1.15em;font-weight:700;color:var(--amber);text-decoration:none;margin-right:auto;letter-spacing:0.02em;white-space:nowrap;}
+.vp-brand span{color:var(--mint);font-family:'DM Sans',sans-serif;font-size:0.72em;font-weight:400;margin-left:0.5em;opacity:0.85;}
+.vp-links{display:flex;align-items:center;gap:0.2em;list-style:none;}
+.vp-links>li{position:relative;}
+.vp-links>li>a,.vp-links>li>button{display:flex;align-items:center;gap:0.3em;padding:0.4em 0.9em;color:var(--text);text-decoration:none;font-size:0.9em;font-weight:500;border-radius:7px;background:none;border:none;cursor:pointer;transition:background .15s,color .15s;white-space:nowrap;}
+.vp-links>li>a:hover,.vp-links>li>button:hover,.vp-links>li>a.vp-active{background:rgba(93,90,158,0.25);color:var(--amber);}
+.vp-arrow{font-size:0.6em;opacity:0.65;transition:transform .2s;}
+.vp-links>li:hover .vp-arrow{transform:rotate(180deg);}
+.vp-drop{position:absolute;top:calc(100% + 6px);right:0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;min-width:240px;padding:0.5em;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility .18s;box-shadow:0 16px 48px rgba(0,0,0,0.55);z-index:200;}
+.vp-links>li:hover .vp-drop,.vp-links>li:focus-within .vp-drop{opacity:1;visibility:visible;transform:translateY(0);}
+.vp-drop a{display:flex;align-items:flex-start;gap:0.6em;padding:0.6em 0.9em;color:var(--text);text-decoration:none;font-size:0.88em;border-radius:7px;transition:background .15s,color .15s;}
+.vp-drop a:hover{background:rgba(93,90,158,0.25);color:var(--amber);}
+.vp-drop-label{font-family:'DM Mono',monospace;font-size:0.72em;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);padding:0.4em 0.9em 0.2em;margin-top:0.2em;}
+.vp-drop hr{border:none;border-top:1px solid var(--border);margin:0.4em 0;}
+.vp-drop small{color:var(--muted);display:block;margin-top:2px;font-size:0.85em;}
+.vp-ham{display:none;background:none;border:none;cursor:pointer;padding:0.4em;flex-direction:column;gap:5px;margin-left:1em;}
+.vp-ham span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;}
+@media(max-width:700px){
+  .vp-links{display:none;} .vp-ham{display:flex;}
+  .vp-links.open{display:flex;flex-direction:column;align-items:stretch;position:absolute;top:58px;left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:1em;gap:0.3em;}
+  .vp-drop{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:1px solid var(--border);margin-top:0.3em;}
+}
+
+/* ══ PAGE ══ */
+.page{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:56px 2em 88px;}
+
+/* ══ HERO ══ */
+.hero{display:grid;grid-template-columns:1fr 260px;gap:40px;align-items:center;padding-bottom:48px;border-bottom:1px solid var(--border);margin-bottom:56px;animation:up .65s ease both;}
+@media(max-width:700px){.hero{grid-template-columns:1fr;}}
+.hero-eyebrow{
+  font-family:'DM Mono',monospace;font-size:1em;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--mint);margin-bottom:16px;display:flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:2px;background:var(--mint);border-radius:1px;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5em,6vw,4.5em);font-weight:700;line-height:.95;color:var(--text);}
+.hero h1 em{color:var(--mint);font-style:normal;display:block;}
+.hero-tagline{font-size:1em;color:var(--muted);line-height:1.8;margin-top:18px;max-width:540px;}
+.hero-meta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
+.meta-chip{
+  display:flex;align-items:center;gap:7px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;padding:7px 14px;
+  font-family:'DM Mono',monospace;font-size:1em;font-weight:500;color:var(--muted);
+  transition:border-color .2s,color .2s;
+}
+.meta-chip:hover{border-color:rgba(123,191,168,0.4);color:var(--mint);}
+.meta-chip .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.hero-card{
+  background:linear-gradient(145deg,rgba(123,191,168,.1),rgba(123,191,168,.02));
+  border:1px solid rgba(123,191,168,.28);
+  border-radius:16px;padding:28px 24px;text-align:center;
+}
+.hc-label{font-family:'DM Mono',monospace;font-size:1em;letter-spacing:2.5px;text-transform:uppercase;color:var(--mint);margin-bottom:12px;}
+.hc-role{font-family:'Cormorant Garamond',serif;font-size:1.4em;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:14px;}
+.hc-company{font-size:1em;color:var(--mint);font-weight:600;margin-bottom:4px;}
+.hc-location{font-size:1em;color:var(--muted);margin-bottom:16px;}
+.hc-date{display:inline-block;background:rgba(123,191,168,.12);border:1px solid rgba(123,191,168,.25);border-radius:100px;padding:5px 14px;font-family:'DM Mono',monospace;font-size:1em;color:var(--mint);letter-spacing:1px;}
+
+/* ══ STATS ROW ══ */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:56px;animation:up .7s ease .1s both;}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 18px;text-align:center;transition:border-color .2s,transform .2s;}
+.stat-box:hover{border-color:rgba(123,191,168,.35);transform:translateY(-3px);}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:2.4em;font-weight:700;color:var(--amber);line-height:1;margin-bottom:6px;}
+.stat-l{font-family:'DM Mono',monospace;font-size:0.8em;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+
+/* ══ SECTION LABELS ══ */
+.s-lbl{font-family:'DM Mono',monospace;font-size:1em;letter-spacing:3px;text-transform:uppercase;color:var(--mint);margin-bottom:22px;margin-top:52px;display:flex;align-items:center;gap:14px;}
+.s-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ══ SNAPSHOT ══ */
+.snapshot{
+  background:linear-gradient(135deg,rgba(232,168,76,.07),rgba(232,168,76,.01));
+  border:1px solid rgba(232,168,76,.22);
+  border-radius:16px;padding:28px 36px;
+  font-size:1.05em;color:var(--muted);line-height:1.9;
+  position:relative;overflow:hidden;
+}
+.snapshot::before{content:'▶';position:absolute;right:28px;top:20px;font-size:72px;color:rgba(232,168,76,.05);line-height:1;pointer-events:none;}
+.snapshot strong.mint{color:var(--mint-light);}
+.snapshot strong.amber{color:var(--amber-glow);}
+
+/* ══ RESP GRID ══ */
+.resp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+.resp-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:24px 22px;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  animation:up .5s ease both;
+}
+.resp-card:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(123,191,168,.08);border-color:rgba(123,191,168,.25);}
+.resp-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.resp-icon{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2em;flex-shrink:0;}
+.ri1{background:rgba(123,191,168,.15);}
+.ri2{background:rgba(232,168,76,.13);}
+.ri3{background:rgba(201,132,138,.13);}
+.ri4{background:rgba(93,90,158,.2);}
+.ri5{background:rgba(168,216,200,.12);}
+.ri6{background:rgba(201,132,138,.15);}
+.resp-num{font-family:'DM Mono',monospace;font-size:1em;letter-spacing:2px;color:var(--mint);display:block;text-transform:uppercase;}
+.resp-title{font-size:1em;font-weight:700;color:var(--text);line-height:1.25;}
+.bullet-list{list-style:none;}
+.bullet-list li{font-size:1em;color:var(--muted);padding:5px 0;border-bottom:1px solid rgba(93,90,158,.15);display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+.bullet-list li:last-child{border:none;}
+.bullet-list li::before{content:'—';color:var(--mint);font-size:1em;flex-shrink:0;opacity:.7;}
+
+/* ══ KPI STRIP ══ */
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;}
+.kpi-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 16px;text-align:center;transition:border-color .2s,transform .2s;}
+.kpi-box:hover{border-color:rgba(232,168,76,.4);transform:translateY(-3px);}
+.kpi-icon{font-size:1.4em;margin-bottom:10px;}
+.kpi-name{font-family:'Cormorant Garamond',serif;font-size:1em;font-weight:700;color:var(--amber);margin-bottom:5px;}
+.kpi-desc{font-size:1em;color:var(--muted);line-height:1.5;}
+
+/* ══ SKILL BLOCKS ══ */
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+.skill-block{border-radius:12px;padding:20px 18px;animation:up .5s ease both;transition:transform .2s;}
+.skill-block:hover{transform:translateY(-3px);}
+.sb1{background:rgba(123,191,168,.07);border:1px solid rgba(123,191,168,.2);}
+.sb2{background:rgba(168,216,200,.06);border:1px solid rgba(168,216,200,.2);}
+.sb3{background:rgba(93,90,158,.15);border:1px solid rgba(93,90,158,.3);}
+.sb4{background:rgba(232,168,76,.06);border:1px solid rgba(232,168,76,.2);}
+.sb5{background:rgba(201,132,138,.06);border:1px solid rgba(201,132,138,.2);}
+.sk-lbl{font-family:'DM Mono',monospace;font-size:1em;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.sb1 .sk-lbl{color:var(--mint);}
+.sb2 .sk-lbl{color:var(--mint-light);}
+.sb3 .sk-lbl{color:var(--indigo-light);}
+.sb4 .sk-lbl{color:var(--amber);}
+.sb5 .sk-lbl{color:var(--rose);}
+.sk-tag{display:inline-block;margin:3px;font-size:1em;font-weight:500;padding:4px 11px;border-radius:4px;cursor:default;}
+.sb1 .sk-tag{background:rgba(123,191,168,.12);color:rgba(123,191,168,.95);}
+.sb2 .sk-tag{background:rgba(168,216,200,.12);color:rgba(168,216,200,.95);}
+.sb3 .sk-tag{background:rgba(93,90,158,.2);color:var(--indigo-light);}
+.sb4 .sk-tag{background:rgba(232,168,76,.12);color:rgba(232,168,76,.95);}
+.sb5 .sk-tag{background:rgba(201,132,138,.12);color:rgba(201,132,138,.95);}
+
+/* ══ COMPLIANCE ══ */
+.comp-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.comp-row{grid-template-columns:1fr;}}
+.comp-card{border-radius:14px;padding:22px 20px;display:flex;gap:16px;align-items:flex-start;}
+.comp-card.fssc{background:rgba(123,191,168,.06);border:1px solid rgba(123,191,168,.2);}
+.comp-card.halal{background:rgba(93,90,158,.12);border:1px solid rgba(93,90,158,.25);}
+.comp-badge{width:48px;height:48px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.4em;flex-shrink:0;}
+.fssc .comp-badge{background:rgba(123,191,168,.15);}
+.halal .comp-badge{background:rgba(93,90,158,.2);}
+.comp-title{font-family:'Cormorant Garamond',serif;font-size:1.05em;font-weight:700;margin-bottom:6px;}
+.fssc .comp-title{color:var(--mint);}
+.halal .comp-title{color:var(--indigo-light);}
+.comp-desc{font-size:1em;color:var(--muted);line-height:1.6;}
+
+/* ══ KEYWORD CLOUD ══ */
+.kw-cloud{display:flex;flex-wrap:wrap;gap:9px;}
+.kw{display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:6px 13px;font-family:'DM Mono',monospace;font-size:1em;font-weight:500;letter-spacing:.5px;color:var(--muted);transition:all .18s;cursor:default;}
+.kw:hover{background:rgba(123,191,168,.1);border-color:rgba(123,191,168,.35);color:var(--mint);transform:translateY(-2px);}
+.kw.hi{color:var(--mint);border-color:rgba(123,191,168,.25);background:rgba(123,191,168,.07);}
+
+/* ══ FOOTER ══ */
+.footer{border-top:1px solid var(--border);padding-top:24px;margin-top:60px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'DM Mono',monospace;font-size:1em;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+
+@keyframes up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<nav class="vp-nav">
+  <div class="vp-nav-inner">
+    <a href="vimukthi_portfolio.html" class="vp-brand">Vimukthi Pathirage <span>📍 Auckland, NZ</span></a>
+    <ul class="vp-links" id="navLinks">
+      <li><a href="vimukthi_portfolio.html">Portfolio</a></li>
+      <li>
+        <button>Experience <span class="vp-arrow">▼</span></button>
+        <div class="vp-drop">
+          <div class="vp-drop-label">Current Role</div>
+          <a href="Inventor_Controller.html" class="vp-active">📦 Inventory Controller<small>LSG Sky Chefs · Auckland</small></a>
+          <hr>
+          <div class="vp-drop-label">Previous Role</div>
+          <a href="CI_Lead_Full_Role.html">🧵 Senior Executive – Procurement<small>Bodyline Trading · Sri Lanka</small></a>
+        </div>
+      </li>
+      <li>
+        <button>Projects <span class="vp-arrow">▼</span></button>
+        <div class="vp-drop">
+          <div class="vp-drop-label">Key Achievements</div>
+          <a href="RM_writeoff_saving.html">📉 Write-Off Reduction A3<small>72% COF reduction · Bodyline</small></a>
+          <a href="Triumph_LeadTime_Improvement.html">⚡ Lead Time Improvement<small>33% reduction · Triumph</small></a>
+        </div>
+      </li>
+    </ul>
+    <button class="vp-ham" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Supply Chain · Inventory Control · SAP ERP · Auckland, NZ</div>
+      <h1>Inventory<br><em>Controller</em></h1>
+      <p class="hero-tagline">
+        Detail-oriented supply chain professional specialising in inventory accuracy, SAP ERP operations, and analytics within a high-volume aviation catering production environment. Driving stock precision, KPI performance, and compliance across multi-temperature warehousing.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-chip"><span class="dot" style="background:var(--mint)"></span>SAP ERP · SAP HANA</div>
+        <div class="meta-chip"><span class="dot" style="background:var(--amber)"></span>Inventory Optimization</div>
+        <div class="meta-chip"><span class="dot" style="background:var(--mint-dim)"></span>FSSC 22000</div>
+        <div class="meta-chip"><span class="dot" style="background:var(--indigo-light)"></span>Halal</div>
+        <div class="meta-chip"><span class="dot" style="background:var(--rose)"></span>Auckland, New Zealand</div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hc-label">Current Role</div>
+      <div class="hc-role">Inventory Controller</div>
+      <div class="hc-company">LSG Sky Chefs</div>
+      <div class="hc-location">📍 Auckland, New Zealand</div>
+      <div class="hc-date">APR 2025 – PRESENT</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-n">3+</div><div class="stat-l">Storage Environments</div></div>
+    <div class="stat-box"><div class="stat-n">5</div><div class="stat-l">KPI Domains Tracked</div></div>
+    <div class="stat-box"><div class="stat-n">SAP</div><div class="stat-l">HANA ERP System</div></div>
+    <div class="stat-box"><div class="stat-n">DIFOT</div><div class="stat-l">Primary KPI Metric</div></div>
+    <div class="stat-box"><div class="stat-n">5</div><div class="stat-l">Core Expertise Areas</div></div>
+  </div>
+
+  <!-- SNAPSHOT -->
+  <div class="s-lbl">Professional Snapshot</div>
+  <div class="snapshot">
+    Detail-oriented Inventory Controller specialising in <strong class="mint">inventory accuracy</strong>, <strong class="mint">SAP ERP operations</strong>, and <strong class="mint">supply chain analytics</strong> within a high-volume aviation catering production environment. Experienced in <strong class="amber">inventory optimisation</strong>, stock reconciliation, KPI reporting, and ERP-based warehouse operations while ensuring compliance with food safety and certification standards.
+  </div>
+
+  <!-- RESPONSIBILITIES -->
+  <div class="s-lbl">Role Responsibilities</div>
+  <div class="resp-grid">
+    <div class="resp-card">
+      <div class="resp-head"><div class="resp-icon ri1">📦</div><div><span class="resp-num">Domain 01</span><div class="resp-title">Inventory Operations</div></div></div>
+      <ul class="bullet-list">
+        <li>Manage finished goods &amp; raw material inventory across multi-temperature facilities — chillers, freezers, dry stores</li>
+        <li>Maintain high inventory accuracy using SAP ERP tracking and cycle counting controls</li>
+        <li>Ensure optimal stock availability for high-volume airline catering production</li>
+      </ul>
+    </div>
+    <div class="resp-card">
+      <div class="resp-head"><div class="resp-icon ri2">🔄</div><div><span class="resp-num">Domain 02</span><div class="resp-title">Supply Chain &amp; Replenishment</div></div></div>
+      <ul class="bullet-list">
+        <li>Schedule and monitor inventory replenishment cycles for on-time order fulfillment</li>
+        <li>Coordinate stock availability across production, procurement, and logistics teams</li>
+      </ul>
+    </div>
+    <div class="resp-card">
+      <div class="resp-head"><div class="resp-icon ri3">🎯</div><div><span class="resp-num">Domain 03</span><div class="resp-title">Inventory Accuracy &amp; Controls</div></div></div>
+      <ul class="bullet-list">
+        <li>Conduct weekly and monthly cycle counts and inventory reconciliation</li>
+        <li>Perform root cause analysis (RCA) on stock discrepancies</li>
+        <li>Implement corrective &amp; preventive actions (CAPA) to improve accuracy and process efficiency</li>
+      </ul>
+    </div>
+    <div class="resp-card">
+      <div class="resp-head"><div class="resp-icon ri4">💻</div><div><span class="resp-num">Domain 04</span><div class="resp-title">SAP ERP &amp; Warehouse Transactions</div></div></div>
+      <ul class="bullet-list">
+        <li>Perform Goods Receipt Note (GRN) processing in SAP HANA</li>
+        <li>Manage material issuance, stock adjustments, and inbound delivery validation</li>
+        <li>Ensure accurate ERP documentation and inventory transaction integrity</li>
+      </ul>
+    </div>
+    <div class="resp-card">
+      <div class="resp-head"><div class="resp-icon ri5">📊</div><div><span class="resp-num">Domain 05</span><div class="resp-title">Data Analytics &amp; KPI Reporting</div></div></div>
+      <ul class="bullet-list">
+        <li>Lead Excel-based inventory reporting dashboards</li>
+        <li>Track DIFOT (Delivery in Full On Time) performance</li>
+        <li>Monitor inventory write-offs and slow-moving / obsolete stock</li>
+        <li>Report on stock accuracy metrics across the supply chain</li>
+      </ul>
+    </div>
+    <div class="resp-card">
+      <div class="resp-head"><div class="resp-icon ri6">🛡</div><div><span class="resp-num">Domain 06</span><div class="resp-title">Compliance &amp; Quality Assurance</div></div></div>
+      <ul class="bullet-list">
+        <li>Maintain stock handling aligned with FSSC 22000 food safety management systems</li>
+        <li>Ensure inventory processes comply with Halal certification standards</li>
+        <li>Support traceability and audit readiness in regulated food production environments</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="s-lbl">Supply Chain KPIs Tracked</div>
+  <div class="kpi-strip">
+    <div class="kpi-box"><div class="kpi-icon">🚀</div><div class="kpi-name">DIFOT</div><div class="kpi-desc">Delivery in Full<br>On Time</div></div>
+    <div class="kpi-box"><div class="kpi-icon">📉</div><div class="kpi-name">Write-offs</div><div class="kpi-desc">Inventory write-off<br>rate tracking</div></div>
+    <div class="kpi-box"><div class="kpi-icon">🐌</div><div class="kpi-name">Slow-Moving Stock</div><div class="kpi-desc">Obsolete &amp; ageing<br>inventory monitoring</div></div>
+    <div class="kpi-box"><div class="kpi-icon">✅</div><div class="kpi-name">Stock Accuracy</div><div class="kpi-desc">Variance reporting &amp;<br>reconciliation rate</div></div>
+    <div class="kpi-box"><div class="kpi-icon">🔁</div><div class="kpi-name">Cycle Count</div><div class="kpi-desc">Weekly &amp; monthly<br>count completion</div></div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="s-lbl">Core Expertise</div>
+  <div class="skill-grid">
+    <div class="skill-block sb1"><div class="sk-lbl">⛓ Supply Chain Operations</div><div><span class="sk-tag">Inventory Management</span><span class="sk-tag">Warehouse Operations</span><span class="sk-tag">Stock Replenishment</span><span class="sk-tag">Demand Support</span><span class="sk-tag">Material Flow</span></div></div>
+    <div class="skill-block sb2"><div class="sk-lbl">📈 Inventory Analytics</div><div><span class="sk-tag">Accuracy Control</span><span class="sk-tag">Cycle Counting</span><span class="sk-tag">Variance Investigation</span><span class="sk-tag">Root Cause Analysis</span><span class="sk-tag">Slow-Moving Stock</span></div></div>
+    <div class="skill-block sb3"><div class="sk-lbl">💻 Systems &amp; Tools</div><div><span class="sk-tag">SAP ERP</span><span class="sk-tag">SAP HANA</span><span class="sk-tag">ERP Transactions</span><span class="sk-tag">Advanced Excel</span><span class="sk-tag">KPI Dashboards</span></div></div>
+    <div class="skill-block sb4"><div class="sk-lbl">🏭 Warehouse &amp; Logistics</div><div><span class="sk-tag">GRN Processing</span><span class="sk-tag">Material Issuance</span><span class="sk-tag">Inbound Delivery</span><span class="sk-tag">Multi-temp Storage</span><span class="sk-tag">Stock Adjustments</span></div></div>
+    <div class="skill-block sb5"><div class="sk-lbl">🛡 Compliance &amp; Standards</div><div><span class="sk-tag">Food Safety Controls</span><span class="sk-tag">FSSC 22000</span><span class="sk-tag">Halal Compliance</span><span class="sk-tag">Traceability</span><span class="sk-tag">Audit Readiness</span></div></div>
+  </div>
+
+  <!-- COMPLIANCE -->
+  <div class="s-lbl">Compliance &amp; Certification Standards</div>
+  <div class="comp-row">
+    <div class="comp-card fssc"><div class="comp-badge">🍽</div><div><div class="comp-title">FSSC 22000</div><div class="comp-desc">Food Safety System Certification awareness. Inventory handling and storage procedures aligned with food safety management systems in regulated aviation catering environments.</div></div></div>
+    <div class="comp-card halal"><div class="comp-badge">☪</div><div><div class="comp-title">Halal Certification Compliance</div><div class="comp-desc">Inventory control processes maintained in compliance with Halal certification standards — segregation, traceability, and audit documentation for certified product lines.</div></div></div>
+  </div>
+
+  <!-- KEYWORDS -->
+  <div class="s-lbl">Professional Keywords</div>
+  <div class="kw-cloud">
+    <span class="kw hi">Inventory Control</span><span class="kw hi">SAP ERP</span><span class="kw hi">SAP HANA</span>
+    <span class="kw hi">Supply Chain Operations</span><span class="kw">Warehouse Management</span>
+    <span class="kw">Stock Replenishment</span><span class="kw hi">Inventory Optimization</span>
+    <span class="kw">Cycle Counting</span><span class="kw hi">Inventory Reconciliation</span>
+    <span class="kw">Root Cause Analysis</span><span class="kw hi">DIFOT KPI</span>
+    <span class="kw">Inventory Reporting</span><span class="kw">ERP Inventory Transactions</span>
+    <span class="kw hi">Goods Receipt Note (GRN)</span><span class="kw">Material Issuance</span>
+    <span class="kw">Slow Moving Inventory</span><span class="kw hi">Supply Chain Analytics</span>
+    <span class="kw">Food Production Supply Chain</span><span class="kw hi">Aviation Catering Logistics</span>
+    <span class="kw">CAPA</span><span class="kw">FSSC 22000</span><span class="kw">Halal Compliance</span>
+    <span class="kw">Multi-temperature Storage</span><span class="kw">Audit Readiness</span>
+  </div>
+
+  <div class="footer">
+    <span>LSG Sky Chefs · Auckland, New Zealand</span>
+    <span>Inventory Controller · Supply Chain Operations · SAP ERP</span>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById('hamburger').addEventListener('click',function(){
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

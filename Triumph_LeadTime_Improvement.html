@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead Time Reduction – Triumph | Project | Vimukthi Pathirage</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --indigo:#2d2b55; --indigo-deep:#1e1c3a; --indigo-mid:#3a3870; --indigo-light:#5c5a9e;
+  --amber:#e8a84c; --amber-glow:#f0c070; --amber-dim:#b07830;
+  --rose:#c9848a; --rose-light:#e8b0b5; --rose-dim:#a06068;
+  --mint:#7bbfa8; --mint-light:#a8d8c8; --mint-dim:#4a9a80;
+  --bg:#16142e; --bg2:#1e1c3a; --surface:#252348; --surface2:#2e2b5a;
+  --text:#ede8f8; --muted:#9b96c0; --border:rgba(93,90,158,0.3);
+  --green-ok:#5dc894; --red-warn:#e07878; --dim:rgba(93,90,158,0.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;scroll-padding-top:64px;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:1em;line-height:1.65;min-height:100vh;overflow-x:hidden;padding-bottom:60px;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(93,90,158,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(93,90,158,.03) 1px,transparent 1px);background-size:52px 52px;pointer-events:none;z-index:0;}
+
+/* NAV */
+.vp-nav{position:sticky;top:0;z-index:100;background:rgba(22,20,46,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2em;}
+.vp-nav-inner{max-width:1020px;margin:0 auto;display:flex;align-items:center;height:58px;gap:0;}
+.vp-brand{font-family:'Cormorant Garamond',serif;font-size:1.15em;font-weight:700;color:var(--amber);text-decoration:none;margin-right:auto;letter-spacing:0.02em;white-space:nowrap;}
+.vp-brand span{color:var(--mint);font-family:'DM Sans',sans-serif;font-size:0.72em;font-weight:400;margin-left:0.5em;opacity:0.85;}
+.vp-links{display:flex;align-items:center;gap:0.2em;list-style:none;}
+.vp-links>li{position:relative;}
+.vp-links>li>a,.vp-links>li>button{display:flex;align-items:center;gap:0.3em;padding:0.4em 0.9em;color:var(--text);text-decoration:none;font-size:0.9em;font-weight:500;border-radius:7px;background:none;border:none;cursor:pointer;transition:background .15s,color .15s;white-space:nowrap;}
+.vp-links>li>a:hover,.vp-links>li>button:hover,.vp-links>li>a.vp-active{background:rgba(93,90,158,0.25);color:var(--amber);}
+.vp-arrow{font-size:0.6em;opacity:0.65;transition:transform .2s;}
+.vp-links>li:hover .vp-arrow{transform:rotate(180deg);}
+.vp-drop{position:absolute;top:calc(100% + 6px);right:0;background:var(--bg2);border:1px solid var(--border);border-radius:12px;min-width:240px;padding:0.5em;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility .18s;box-shadow:0 16px 48px rgba(0,0,0,0.55);z-index:200;}
+.vp-links>li:hover .vp-drop,.vp-links>li:focus-within .vp-drop{opacity:1;visibility:visible;transform:translateY(0);}
+.vp-drop a{display:flex;align-items:flex-start;gap:0.6em;padding:0.6em 0.9em;color:var(--text);text-decoration:none;font-size:0.88em;border-radius:7px;transition:background .15s,color .15s;}
+.vp-drop a:hover{background:rgba(93,90,158,0.25);color:var(--amber);}
+.vp-drop-label{font-family:'DM Mono',monospace;font-size:0.72em;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);padding:0.4em 0.9em 0.2em;margin-top:0.2em;}
+.vp-drop hr{border:none;border-top:1px solid var(--border);margin:0.4em 0;}
+.vp-drop small{color:var(--muted);display:block;margin-top:2px;font-size:0.85em;}
+.vp-ham{display:none;background:none;border:none;cursor:pointer;padding:0.4em;flex-direction:column;gap:5px;margin-left:1em;}
+.vp-ham span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;}
+@media(max-width:700px){
+  .vp-links{display:none;} .vp-ham{display:flex;}
+  .vp-links.open{display:flex;flex-direction:column;align-items:stretch;position:absolute;top:58px;left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:1em;gap:0.3em;}
+  .vp-drop{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:1px solid var(--border);margin-top:0.3em;}
+}
+
+/* CONTENT */
+.wrap{max-width:1020px;margin:0 auto;padding:56px 2em 0;position:relative;z-index:1;}
+.header{text-align:center;margin-bottom:52px;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:1em;letter-spacing:4px;color:var(--mint);text-transform:uppercase;margin-bottom:12px;}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2em,5.5vw,3.5em);font-weight:700;color:var(--text);line-height:1.08;margin-bottom:10px;}
+h1 span{color:var(--amber);}
+.sub{font-family:'DM Mono',monospace;font-size:1em;color:var(--muted);letter-spacing:3px;text-transform:uppercase;}
+.hdivider{width:70px;height:3px;background:linear-gradient(90deg,var(--mint),var(--amber));border-radius:100px;margin:20px auto 0;}
+.slabel{font-family:'DM Mono',monospace;font-size:1em;letter-spacing:3px;color:var(--mint);text-transform:uppercase;margin-bottom:20px;text-align:center;}
+
+/* GOAL */
+.goal-box{background:linear-gradient(135deg,rgba(123,191,168,.07),rgba(93,90,158,.05));border:1px solid rgba(123,191,168,.22);border-radius:18px;padding:28px 32px;margin-bottom:36px;}
+.goal-title{font-family:'Cormorant Garamond',serif;font-size:1.25em;font-weight:700;color:var(--amber);margin-bottom:12px;}
+.goal-box p{font-size:1em;color:var(--muted);line-height:1.78;}
+
+/* CARDS */
+.card{border-radius:16px;padding:24px 22px;}
+.card-gold{background:rgba(232,168,76,.06);border:1px solid rgba(232,168,76,.2);}
+.card-dark{background:var(--surface);border:1px solid var(--border);}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:36px;}
+.kpi-card{border-radius:14px;padding:18px 14px;text-align:center;border:1px solid;}
+.kpi-card.ok{background:rgba(93,200,148,.06);border-color:rgba(93,200,148,.25);}
+.kpi-card.warn{background:rgba(232,168,76,.06);border-color:rgba(232,168,76,.25);}
+.kpi-card.bad{background:rgba(224,120,120,.06);border-color:rgba(224,120,120,.25);}
+.kpi-label{font-family:'DM Mono',monospace;font-size:1em;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.kpi-actual{font-family:'Cormorant Garamond',serif;font-size:1.8em;font-weight:700;}
+.kpi-card.ok .kpi-actual{color:var(--green-ok);}
+.kpi-card.warn .kpi-actual{color:var(--amber);}
+.kpi-card.bad .kpi-actual{color:var(--red-warn);}
+.kpi-target{font-size:1em;color:var(--muted);margin-top:4px;}
+.kpi-badge{display:inline-block;margin-top:8px;font-size:1em;font-weight:600;padding:2px 10px;border-radius:100px;}
+.badge-ok{background:rgba(93,200,148,.15);color:var(--green-ok);}
+.badge-warn{background:rgba(232,168,76,.15);color:var(--amber);}
+.badge-bad{background:rgba(224,120,120,.15);color:var(--red-warn);}
+
+/* LT BARS */
+.lt-compare{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px;align-items:flex-end;}
+.lt-bar-wrap{flex:1 1 70px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.lt-bar-outer{width:100%;background:rgba(93,90,158,.15);border-radius:8px;height:180px;display:flex;align-items:flex-end;overflow:hidden;}
+.lt-bar-inner{width:100%;border-radius:8px 8px 0 0;}
+.lt-bar-label{font-size:1em;color:var(--muted);text-align:center;}
+.lt-bar-val{font-size:1em;font-weight:600;color:var(--text);text-align:center;}
+
+/* PHASES */
+.phase-label{font-size:1em;color:var(--muted);margin-bottom:2px;}
+.phase-bar-outer{background:rgba(93,90,158,.2);border-radius:8px;height:36px;position:relative;overflow:hidden;}
+.phase-bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding:0 12px;font-size:1em;font-weight:600;white-space:nowrap;color:var(--indigo-deep);}
+
+/* SMART */
+.smart-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:36px;}
+.smart-card{border-radius:14px;padding:16px 14px;text-align:center;background:rgba(93,90,158,.15);border:1px solid rgba(93,90,158,.3);}
+.smart-letter{font-family:'Cormorant Garamond',serif;font-size:2em;font-weight:900;color:var(--amber);margin-bottom:4px;}
+.smart-word{font-size:1em;font-weight:600;color:var(--mint);margin-bottom:6px;letter-spacing:1px;}
+.smart-desc{font-size:1em;color:var(--muted);line-height:1.5;}
+
+/* FISHBONE */
+.fishbone-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:36px;}
+@media(max-width:600px){.fishbone-grid{grid-template-columns:1fr;}}
+.fish-card{border-radius:14px;padding:18px 16px;}
+.fish-card.high{background:rgba(224,120,120,.08);border:1px solid rgba(224,120,120,.28);}
+.fish-card.med{background:rgba(232,168,76,.07);border:1px solid rgba(232,168,76,.25);}
+.fish-card.low{background:rgba(123,191,168,.07);border:1px solid rgba(123,191,168,.2);}
+.fish-card.none{background:var(--surface);border:1px solid var(--border);}
+.fish-impact{font-size:1em;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:600;}
+.fish-card.high .fish-impact{color:var(--red-warn);}
+.fish-card.med .fish-impact{color:var(--amber);}
+.fish-card.low .fish-impact{color:var(--mint);}
+.fish-card.none .fish-impact{color:var(--muted);}
+.fish-cause{font-size:1em;color:var(--text);font-weight:500;margin-bottom:4px;}
+.fish-method{font-size:1em;color:var(--muted);}
+
+/* WHY */
+.why-chain{display:flex;flex-direction:column;gap:0;margin-bottom:14px;}
+.why-box{border-radius:12px;padding:14px 18px;position:relative;}
+.why-box.root-specific{background:rgba(224,120,120,.1);border:1px solid rgba(224,120,120,.3);}
+.why-box.root-systematic{background:rgba(232,168,76,.09);border:1px solid rgba(232,168,76,.28);}
+.why-box.normal{background:var(--surface);border:1px solid var(--border);}
+.why-tag{font-size:1em;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;font-weight:600;}
+.why-box.root-specific .why-tag{color:var(--red-warn);}
+.why-box.root-systematic .why-tag{color:var(--amber);}
+.why-box.normal .why-tag{color:var(--mint);}
+.why-text{font-size:1em;color:var(--text);line-height:1.5;}
+.why-arrow{text-align:center;color:var(--dim);font-size:1.2em;line-height:1;margin:2px 0;}
+
+/* BA */
+.ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:36px;}
+@media(max-width:600px){.ba-grid{grid-template-columns:1fr;}}
+.ba-card{border-radius:16px;padding:24px 22px;text-align:center;}
+.ba-card.before{background:rgba(224,120,120,.07);border:1px solid rgba(224,120,120,.22);}
+.ba-card.after{background:rgba(93,200,148,.07);border:1px solid rgba(93,200,148,.22);}
+.ba-tag{font-size:1em;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;font-weight:600;}
+.ba-card.before .ba-tag{color:var(--red-warn);}
+.ba-card.after .ba-tag{color:var(--green-ok);}
+.ba-number{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5em,6vw,4em);font-weight:900;line-height:1;}
+.ba-card.before .ba-number{color:var(--red-warn);}
+.ba-card.after .ba-number{color:var(--green-ok);}
+.ba-unit{font-size:1em;color:var(--muted);margin-top:4px;}
+.ba-phases{margin-top:16px;text-align:left;}
+.ba-phase{font-size:1em;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--border);}
+.ba-phase span{float:right;font-weight:600;}
+.ba-card.before .ba-phase span{color:var(--red-warn);}
+.ba-card.after .ba-phase span{color:var(--green-ok);}
+
+/* BENEFITS */
+.benefit-highlight{background:linear-gradient(135deg,rgba(232,168,76,.09),rgba(232,168,76,.02));border:1px solid rgba(232,168,76,.25);border-radius:18px;padding:28px 32px;margin-bottom:36px;display:flex;flex-wrap:wrap;gap:30px;align-items:center;justify-content:center;}
+.benefit-stat{text-align:center;}
+.benefit-stat .big{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2em,5vw,3.2em);font-weight:900;color:var(--amber);}
+.benefit-stat .sm{font-size:1em;color:var(--muted);margin-top:4px;}
+.benefit-divider{width:1px;height:60px;background:rgba(232,168,76,.2);}
+
+/* INTANGIBLE */
+.intangible-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:36px;}
+.int-card{border-radius:14px;padding:18px 16px;background:var(--surface);border:1px solid var(--border);transition:transform .2s,box-shadow .2s,border-color .2s;}
+.int-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(123,191,168,.1);border-color:rgba(123,191,168,.3);}
+.int-icon{font-size:1.5em;margin-bottom:10px;}
+.int-title{font-size:1em;font-weight:600;color:var(--text);margin-bottom:5px;}
+.int-desc{font-size:1em;color:var(--muted);line-height:1.55;}
+
+/* KAIZEN */
+.kaizen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:14px;margin-bottom:36px;}
+.kaizen-card{border-radius:14px;padding:18px 16px;background:rgba(123,191,168,.06);border:1px solid rgba(123,191,168,.18);}
+.kaizen-icon{font-size:1.4em;margin-bottom:8px;}
+.kaizen-title{font-size:1em;font-weight:600;color:var(--mint);margin-bottom:4px;}
+.kaizen-desc{font-size:1em;color:var(--muted);line-height:1.5;}
+
+/* FOOTER */
+.footer{text-align:center;font-family:'DM Mono',monospace;font-size:1em;color:var(--muted);letter-spacing:2px;text-transform:uppercase;padding-top:16px;border-top:1px solid var(--border);margin-top:2em;}
+
+/* WHY GRID */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:36px;}
+@media(max-width:640px){.why-grid{grid-template-columns:1fr;}}
+.why-head{font-family:'DM Mono',monospace;font-size:1em;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+</style>
+</head>
+<body>
+
+<nav class="vp-nav">
+  <div class="vp-nav-inner">
+    <a href="vimukthi_portfolio.html" class="vp-brand">Vimukthi Pathirage <span>📍 Auckland, NZ</span></a>
+    <ul class="vp-links" id="navLinks">
+      <li><a href="vimukthi_portfolio.html">Portfolio</a></li>
+      <li>
+        <button>Experience <span class="vp-arrow">▼</span></button>
+        <div class="vp-drop">
+          <div class="vp-drop-label">Current Role</div>
+          <a href="Inventor_Controller.html">📦 Inventory Controller<small>LSG Sky Chefs · Auckland</small></a>
+          <hr>
+          <div class="vp-drop-label">Previous Role</div>
+          <a href="CI_Lead_Full_Role.html">🧵 Senior Executive – Procurement<small>Bodyline Trading · Sri Lanka</small></a>
+        </div>
+      </li>
+      <li>
+        <button>Projects <span class="vp-arrow">▼</span></button>
+        <div class="vp-drop">
+          <div class="vp-drop-label">Key Achievements</div>
+          <a href="RM_writeoff_saving.html">📉 Write-Off Reduction A3<small>72% COF reduction · Bodyline</small></a>
+          <a href="Triumph_LeadTime_Improvement.html" class="vp-active">⚡ Lead Time Improvement<small>33% reduction · Triumph</small></a>
+        </div>
+      </li>
+    </ul>
+    <button class="vp-ham" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="header">
+    <div class="eyebrow">Project Infographic · Bodyline (Pvt) Ltd · MAS Holdings</div>
+    <h1>Lead Time Reduction<br><span>Triumph</span></h1>
+    <div class="sub">Procurement · Customer Connect Project</div>
+    <div class="hdivider"></div>
+  </div>
+
+  <!-- GOAL -->
+  <div class="goal-box">
+    <div class="goal-title">🎯 Ultimate Goal of the Project</div>
+    <p>This project was initiated to address a critical strategic risk — extended lead times that were limiting growth, reducing competitiveness, and putting a key customer relationship at risk. At the time, total lead time stood at 175 days, well above market expectations, with a defined gap of 50 days to remain competitive.</p>
+    <p style="margin-top:1em;">I led a structured, data-driven transformation initiative focused on reducing lead time across material ordering and production stages. Through root cause analysis using Lean methodologies, we identified systemic constraints including lack of greige fabric availability, absence of forward booking visibility, supplier limitations, and process inefficiencies within buy planning and BOM finalization.</p>
+<p style="margin-top:1em;">
+    To address these, we introduced forward looking demand planning mechanisms, aligned supplier and customer accountability on greige commitments, and streamlined internal processes by reducing dependency bottlenecks in SAP BOM readiness. Supplier engagement and negotiation were critical components, particularly in optimizing dyeing and finishing timelines and improving responsiveness.</p>
+
+    <p style="margin-top:1em;">The initiative delivered a <strong style="color:var(--amber)">33% reduction in lead time</strong>, unlocking the ability to accept short lead-time orders worth over $150K and securing approximately <strong style="color:var(--green-ok)">$5M in ongoing business</strong> by meeting customer expectations. Beyond financial gains, the project strengthened customer trust, enhanced supply chain agility, and positioned the organisation as a competitive partner capable of delivering speed-to-market.</p>
+
+    <p style="margin-top:1em;">This work reflects my capability to lead cross functional transformation, align stakeholders across the value chain, and implement sustainable process improvements that directly impact revenue growth and customer retention.</p>
+  </div>
+
+  <!-- KPI DASHBOARD -->
+  <div class="slabel">📊 Strategy Alignment — KPI Dashboard</div>
+  <div class="kpi-grid">
+    <div class="kpi-card bad"><div class="kpi-label">Lead Time</div><div class="kpi-actual">175</div><div class="kpi-target">Target: 122 days</div><span class="kpi-badge badge-bad">⚠ Below Target</span></div>
+    <div class="kpi-card ok"><div class="kpi-label">OTP</div><div class="kpi-actual">98%</div><div class="kpi-target">Target: 98%</div><span class="kpi-badge badge-ok">✔ On Target</span></div>
+    <div class="kpi-card warn"><div class="kpi-label">OTS</div><div class="kpi-actual">101%</div><div class="kpi-target">Target: 102%</div><span class="kpi-badge badge-warn">≈ Near Target</span></div>
+    <div class="kpi-card warn"><div class="kpi-label">Quality Score</div><div class="kpi-actual">92.5%</div><div class="kpi-target">Target: 96%</div><span class="kpi-badge badge-warn">⚠ Gap Exists</span></div>
+    <div class="kpi-card ok"><div class="kpi-label">Vendor Score Card</div><div class="kpi-actual">99%</div><div class="kpi-target">Target: 85%</div><span class="kpi-badge badge-ok">✔ Exceeded</span></div>
+  </div>
+
+  <!-- LEAD TIME BENCHMARKS -->
+  <div class="slabel">📏 Lead Time Benchmarks — Customer Comparison</div>
+  <div class="lt-compare">
+    <div class="lt-bar-wrap"><div class="lt-bar-val">97</div><div class="lt-bar-outer"><div class="lt-bar-inner" style="height:97px;background:linear-gradient(180deg,var(--green-ok),var(--mint-dim));"></div></div><div class="lt-bar-label">Asics</div></div>
+    <div class="lt-bar-wrap"><div class="lt-bar-val">96</div><div class="lt-bar-outer"><div class="lt-bar-inner" style="height:96px;background:linear-gradient(180deg,var(--green-ok),var(--mint-dim));"></div></div><div class="lt-bar-label">Lindex</div></div>
+    <div class="lt-bar-wrap"><div class="lt-bar-val">118</div><div class="lt-bar-outer"><div class="lt-bar-inner" style="height:118px;background:linear-gradient(180deg,var(--mint),var(--mint-dim));"></div></div><div class="lt-bar-label">New Balance</div></div>
+    <div class="lt-bar-wrap"><div class="lt-bar-val">123</div><div class="lt-bar-outer"><div class="lt-bar-inner" style="height:123px;background:linear-gradient(180deg,var(--mint),var(--mint-dim));"></div></div><div class="lt-bar-label">LB Avg</div></div>
+    <div class="lt-bar-wrap"><div class="lt-bar-val">127</div><div class="lt-bar-outer"><div class="lt-bar-inner" style="height:127px;background:linear-gradient(180deg,var(--amber),var(--amber-dim));"></div></div><div class="lt-bar-label">Odlo</div></div>
+    <div class="lt-bar-wrap"><div class="lt-bar-val">153</div><div class="lt-bar-outer"><div class="lt-bar-inner" style="height:153px;background:linear-gradient(180deg,var(--rose),var(--rose-dim));"></div></div><div class="lt-bar-label">Primark</div></div>
+    <div class="lt-bar-wrap"><div class="lt-bar-val">154</div><div class="lt-bar-outer"><div class="lt-bar-inner" style="height:154px;background:linear-gradient(180deg,var(--rose),var(--rose-dim));"></div></div><div class="lt-bar-label">Lululemon</div></div>
+    <div class="lt-bar-wrap"><div class="lt-bar-val" style="color:var(--red-warn);">175</div><div class="lt-bar-outer"><div class="lt-bar-inner" style="height:175px;background:linear-gradient(180deg,var(--red-warn),#a04040);"></div></div><div class="lt-bar-label" style="color:var(--red-warn);font-weight:700;">Triumph ⚠</div></div>
+  </div>
+
+  <!-- LEAD TIME BREAKDOWN -->
+  <div class="card card-dark" style="margin-bottom:36px;padding:28px;">
+    <div class="slabel" style="text-align:left;margin-bottom:16px;">🔎 Previous Lead Time Breakdown — Triumph (175 Days Total)</div>
+    <div style="margin-bottom:20px;">
+      <div class="phase-label">Material Ordering + Material Production</div>
+      <div class="phase-bar-outer"><div class="phase-bar-fill" style="width:54%;background:linear-gradient(90deg,var(--red-warn),#a04040);">95 days</div></div>
+    </div>
+    <div style="margin-bottom:20px;padding-left:24px;border-left:3px solid rgba(224,120,120,.25);">
+      <div style="margin-bottom:12px;">
+        <div class="phase-label">Buy Processing</div>
+        <div class="phase-bar-outer" style="height:24px;"><div class="phase-bar-fill" style="width:7%;background:var(--indigo-light);color:var(--text);">12d</div></div>
+        <div class="phase-label" style="margin-top:8px;">↳ Material Production (83 days)</div>
+        <div class="phase-bar-outer" style="height:28px;"><div class="phase-bar-fill" style="width:47%;background:rgba(224,120,120,.4);color:var(--text);">83 days</div></div>
+      </div>
+      <div style="padding-left:20px;border-left:2px solid rgba(224,120,120,.2);">
+        <div class="phase-label">↳ Dying &amp; Finishing (43 days)</div>
+        <div class="phase-bar-outer" style="height:24px;"><div class="phase-bar-fill" style="width:24%;background:rgba(224,120,120,.3);color:var(--text);">43d</div></div>
+        <div class="phase-label" style="margin-top:8px;">↳ Yarn &amp; Knitting (40 days)</div>
+        <div class="phase-bar-outer" style="height:24px;"><div class="phase-bar-fill" style="width:23%;background:rgba(224,120,120,.2);color:var(--text);">40d</div></div>
+      </div>
+    </div>
+    <div style="margin-bottom:20px;margin-top:16px;">
+      <div class="phase-label">Sailing</div>
+      <div class="phase-bar-outer"><div class="phase-bar-fill" style="width:16%;background:linear-gradient(90deg,var(--amber),var(--amber-dim));">28 days</div></div>
+    </div>
+    <div style="margin-bottom:20px;">
+      <div class="phase-label">Garment Production</div>
+      <div class="phase-bar-outer"><div class="phase-bar-fill" style="width:22%;background:linear-gradient(90deg,var(--mint),var(--mint-dim));">38 days</div></div>
+    </div>
+    <div>
+      <div class="phase-label">Inspection &amp; Logistics</div>
+      <div class="phase-bar-outer"><div class="phase-bar-fill" style="width:8%;background:linear-gradient(90deg,var(--indigo-light),var(--indigo-mid));">14 days</div></div>
+    </div>
+  </div>
+
+  <!-- SMART TARGET -->
+  <div class="slabel">🎯 SMART Target Setting</div>
+  <div class="card card-gold" style="margin-bottom:20px;padding:22px 28px;text-align:center;">
+    <div style="font-size:1em;color:var(--muted);margin-bottom:16px;">Material Ordering &amp; Production Lead Time</div>
+    <div style="display:flex;justify-content:center;align-items:center;gap:30px;flex-wrap:wrap;">
+      <div><div style="font-size:1em;color:var(--muted);margin-bottom:4px;">Current</div><div style="font-family:'Cormorant Garamond',serif;font-size:3em;font-weight:900;color:var(--red-warn);">95</div><div style="font-size:1em;color:var(--muted);">days</div></div>
+      <div style="font-size:2em;color:var(--dim);">→</div>
+      <div><div style="font-size:1em;color:var(--muted);margin-bottom:4px;">Target (50% reduction)</div><div style="font-family:'Cormorant Garamond',serif;font-size:3em;font-weight:900;color:var(--mint);">45</div><div style="font-size:1em;color:var(--muted);">days</div></div>
+      <div style="background:rgba(123,191,168,.1);border:1px solid rgba(123,191,168,.25);border-radius:12px;padding:12px 20px;">
+        <div style="font-size:1em;color:var(--muted);">Gap to close</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2em;font-weight:700;color:var(--amber);">50 days</div>
+        <div style="font-size:1em;color:var(--muted);">from Oct 2023 orders</div>
+      </div>
+    </div>
+  </div>
+  <div class="smart-grid">
+    <div class="smart-card"><div class="smart-letter">S</div><div class="smart-word">Specific</div><div class="smart-desc">Reduce Triumph LT at material ordering &amp; production</div></div>
+    <div class="smart-card"><div class="smart-letter">M</div><div class="smart-word">Measurable</div><div class="smart-desc">From 95 days to 45 days — 50% reduction trackable</div></div>
+    <div class="smart-card"><div class="smart-letter">A</div><div class="smart-word">Achievable</div><div class="smart-desc">Validated through root cause and solution analysis</div></div>
+    <div class="smart-card"><div class="smart-letter">R</div><div class="smart-word">Realistic</div><div class="smart-desc">Aligned with supplier capabilities &amp; process changes</div></div>
+    <div class="smart-card"><div class="smart-letter">T</div><div class="smart-word">Time-bound</div><div class="smart-desc">October 2023 orders onwards as the go-live milestone</div></div>
+  </div>
+
+  <!-- FISHBONE -->
+  <div class="slabel">Cause Analysis</div>
+  <div class="fishbone-grid">
+    <div class="fish-card high"><div class="fish-impact">🔴 High Impact</div><div class="fish-cause">High Lead Time Fabrics (~80 days)</div><div class="fish-method">Category: Material · Verified via checklist</div></div>
+    <div class="fish-card med"><div class="fish-impact">🟡 Medium Impact</div><div class="fish-cause">Longer Buy Processing vs other customers (12 days)</div><div class="fish-method">Category: Method · Verified via process audit</div></div>
+    
+  </div>
+
+  <!-- WHY-WHY -->
+  <div class="slabel">🔍 Root Cause Analysis — 5 Why Why</div>
+  <div class="why-grid">
+    <div>
+      <div class="why-head">Cause 1 · High Lead Time Fabrics</div>
+      <div class="why-chain">
+        <div class="why-box normal"><div class="why-tag">Problem</div><div class="why-text">Fabrics taking more than 80 days</div></div>
+        <div class="why-arrow">↓ Why?</div>
+        <div class="why-box normal"><div class="why-tag">Why 1</div><div class="why-text">Suppliers don't have greige in hand when orders are placed</div></div>
+        <div class="why-arrow">↓ Why?</div>
+        <div class="why-box root-specific"><div class="why-tag">🔴 Specific Root Cause</div><div class="why-text">Bodyline doesn't book greige for future orders</div></div>
+        <div class="why-arrow">↓ Why?</div>
+        <div class="why-box root-systematic"><div class="why-tag">🟡 Systematic Root Cause</div><div class="why-text">No agreement between Customer and Bodyline to accept greige liability when projection isn't actualised</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="why-head">Cause 2 · Long Buy Processing</div>
+      <div class="why-chain">
+        <div class="why-box normal"><div class="why-tag">Problem</div><div class="why-text">Buy processing takes 12 days vs other customers</div></div>
+        <div class="why-arrow">↓ Why?</div>
+        <div class="why-box root-specific"><div class="why-tag">🔴 Specific Root Cause</div><div class="why-text">Takes long time to finalise MOQs / MCQs / Surcharges</div></div>
+        <div class="why-arrow">↓ Why?</div>
+        <div class="why-box normal"><div class="why-tag">Why 2</div><div class="why-text">Must wait for SAP BOM update before sending inquiry orders to suppliers</div></div>
+        <div class="why-arrow">↓ Why?</div>
+        <div class="why-box root-systematic"><div class="why-tag">🟡 Systematic Root Cause</div><div class="why-text">No system visibility to calculate raw material demand for future orders</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEFORE / AFTER -->
+  <div class="slabel">⚡ Before vs After — Lead Time Transformation</div>
+  <div class="ba-grid">
+    <div class="ba-card before">
+      <div class="ba-tag">Before Project</div>
+      <div class="ba-number">175</div>
+      <div class="ba-unit">Total Lead Time (days)</div>
+      <div class="ba-phases">
+        <div class="ba-phase">Buy Processing <span>12 days</span></div>
+        <div class="ba-phase">Material Ordering to ETD <span>83 days</span></div>
+        <div class="ba-phase">Garment Production <span>38 days</span></div>
+        <div class="ba-phase">Sailing <span>28 days</span></div>
+        <div class="ba-phase">Inspection &amp; Logistics <span>14 days</span></div>
+      </div>
+    </div>
+    <div class="ba-card after">
+      <div class="ba-tag">After Project (Oct 2023+)</div>
+      <div class="ba-number">117</div>
+      <div class="ba-unit">Achieved Lead Time (days)</div>
+      <div class="ba-phases">
+        <div class="ba-phase">Buy Processing <span>2 days ↓</span></div>
+        <div class="ba-phase">Material Ordering to ETD <span>43 days ↓</span></div>
+        <div class="ba-phase">Garment Production <span>30 days ↓</span></div>
+        <div class="ba-phase">Sailing <span>28 days</span></div>
+        <div class="ba-phase">Inspection &amp; Logistics <span>14 days</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BENEFITS -->
+  <div class="slabel">💰 Tangible Benefits Achieved</div>
+  <div class="benefit-highlight">
+    <div class="benefit-stat"><div class="big">33%</div><div class="sm">Lead Time Cut Down</div></div>
+    <div class="benefit-divider"></div>
+    <div class="benefit-stat"><div class="big">$153K</div><div class="sm">Additional Orders Accepted</div></div>
+    <div class="benefit-divider"></div>
+    <div class="benefit-stat"><div class="big">$5M</div><div class="sm">Triumph Business Retained</div></div>
+    <div class="benefit-divider"></div>
+    <div class="benefit-stat"><div class="big">19,560</div><div class="sm">Extra Units Produced</div></div>
+  </div>
+
+  <!-- INTANGIBLE -->
+  <div class="slabel">🌟 Intangible Benefits &amp; Learnings</div>
+  <div class="intangible-grid">
+    <div class="int-card"><div class="int-icon">🏆</div><div class="int-title">Business Retention</div><div class="int-desc">USD 5M Triumph business secured by offering flexible, competitive lead times.</div></div>
+    <div class="int-card"><div class="int-icon">📈</div><div class="int-title">Growth Opportunity</div><div class="int-desc">Competitive lead time creates hope to grow business volume with Triumph.</div></div>
+    <div class="int-card"><div class="int-icon">😊</div><div class="int-title">Customer Satisfaction</div><div class="int-desc">Improved VSC through enhanced responsiveness.</div></div>
+    <div class="int-card"><div class="int-icon">💪</div><div class="int-title">Brand Strength</div><div class="int-desc">Strong brand leads to higher market sales, boosting order volumes for Bodyline.</div></div>
+    <div class="int-card"><div class="int-icon">🚀</div><div class="int-title">New Customer Capability</div><div class="int-desc">Ability to offer short lead times to newly onboarding customers.</div></div>
+    <div class="int-card"><div class="int-icon">🧠</div><div class="int-title">Lean Knowledge</div><div class="int-desc">Team upskilled in Lean tools, negotiation, leadership, and embroidery plant operations.</div></div>
+  </div>
+
+  <!-- KAIZEN -->
+  <div class="slabel">♾ Continual Improvement — Endless Kaizens</div>
+  <div class="kaizen-grid">
+    <div class="kaizen-card"><div class="kaizen-icon">🤖</div><div class="kaizen-title">Excel Automation</div><div class="kaizen-desc">Automating manual Excel workflows to improve speed and accuracy.</div></div>
+    <div class="kaizen-card"><div class="kaizen-icon">🧵</div><div class="kaizen-title">New Embroidery Supplier</div><div class="kaizen-desc">Finding alternative embroidery supplier to resolve cross-development failures.</div></div>
+    <div class="kaizen-card"><div class="kaizen-icon">📦</div><div class="kaizen-title">Material Localising</div><div class="kaizen-desc">Localising raw materials to reduce international sailing dependency.</div></div>
+    <div class="kaizen-card"><div class="kaizen-icon">🇮🇹</div><div class="kaizen-title">Italy Fabric Counter</div><div class="kaizen-desc">Developing local/Asian alternatives to Italy's longest lead time fabrics with Triumph representatives.</div></div>
+    <div class="kaizen-card"><div class="kaizen-icon">📄</div><div class="kaizen-title">SOP Updates</div><div class="kaizen-desc">Updated SOPs for both buy processing and material ordering to sustain gains.</div></div>
+  </div>
+
+  <div class="footer">Bodyline (Pvt) Ltd · MAS Holdings · Triumph Lead Time Reduction Project · Oct 2023</div>
+
+</div>
+
+<script>
+  document.getElementById('hamburger').addEventListener('click',function(){
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+</script>
+</body>
+</html>
