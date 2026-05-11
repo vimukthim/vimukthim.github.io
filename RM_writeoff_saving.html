@@ -151,6 +151,49 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .reason-bar-track{height:0.5em;background:rgba(93,90,158,0.2);border-radius:2px;overflow:hidden;}
 .reason-bar-fill{height:100%;border-radius:2px;}
 
+  /* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(1em); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cell, .kpi-strip, .masthead { animation: fadeUp 0.6s ease both; }
+.cell:nth-child(2) { animation-delay: 0.05s; }
+.cell:nth-child(3) { animation-delay: 0.10s; }
+.cell:nth-child(4) { animation-delay: 0.15s; }
+.cell:nth-child(5) { animation-delay: 0.20s; }
+.cell:nth-child(6) { animation-delay: 0.25s; }
+
+.card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem 2.5rem 2rem;
+      max-width: 680px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: -0.3px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-top: 4px;
+      font-family: Arial, sans-serif;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 1.25rem 0 1.75rem;
+    }
+
+
   /* Chart layout */
     .chart {
       display: flex;
